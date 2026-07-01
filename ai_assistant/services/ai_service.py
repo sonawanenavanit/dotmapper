@@ -1,7 +1,7 @@
 from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 
-from app.config import OPENAI_API_KEY
+from app.config import GROQ_API_KEY
 
 from services.prompt_service import (
     build_system_prompt,
@@ -13,9 +13,9 @@ class AIService:
 
     def __init__(self):
 
-        self.llm = ChatOpenAI(
-            model="gpt-4.1-mini",
-            api_key=OPENAI_API_KEY,
+        self.llm = ChatGroq(
+            model="llama-3.3-70b-versatile",
+            api_key=GROQ_API_KEY,
             temperature=0
         )
 
@@ -32,17 +32,20 @@ class AIService:
 
         return response.content.strip()
 
-    def generate_answer(self,question,sql, data, total_records):
-        """
-        Converts SQL results into a natural language response.
-        """
+    def generate_answer(
+        self,
+        question,
+        sql,
+        data,
+        total_records
+    ):
 
         prompt = build_answer_prompt(
-                question=question,
-                sql=sql,
-                data=data,
-                total_records=total_records
-                   )
+            question,
+            sql,
+            data,
+            total_records
+        )
 
         response = self.llm.invoke(
             [
