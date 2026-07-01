@@ -1,0 +1,14 @@
+openai 
+python-dotenv 
+langchain 
+langchain-openai
+langchain-community 
+langchain-experimental
+langchain
+langchain-openai
+langchain-community
+python-dotenv
+langchain-groq
+langchain_openai
+streamlit 
+requests

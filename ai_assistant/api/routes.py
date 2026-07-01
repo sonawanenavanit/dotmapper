@@ -1,9 +1,17 @@
 from fastapi import APIRouter
+
+from api.models import QueryRequest
 from database.database_service import DatabaseService
+from services.query_service import QueryService
+
+from services.anomaly_service import AnomalyService
+
+anomaly_service = AnomalyService()
 
 router = APIRouter()
 
 db = DatabaseService()
+query_service = QueryService()
 
 
 @router.get("/")
@@ -19,6 +27,22 @@ def health():
         "status": "healthy"
     }
 
+
+# ----------------------------
+# AI Endpoint
+# ----------------------------
+
+@router.post("/query")
+def query(request: QueryRequest):
+
+    return query_service.execute(
+        request.question
+    )
+
+
+# ----------------------------
+# Database Endpoints
+# ----------------------------
 
 @router.get("/tickets/count")
 def total_tickets():
@@ -52,3 +76,8 @@ def ratings():
     result = db.get_average_rating()
 
     return result.to_dict(orient="records")
+
+@router.get("/anomalies")
+def anomalies():
+
+    return anomaly_service.detect_all()
